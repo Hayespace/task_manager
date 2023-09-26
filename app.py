@@ -138,6 +138,20 @@ def edit_task(task_id):
     catagories = mongo.db.catagories.find().sort("category_name", 1)
     return render_template("edit_task.html", task=task, catagories=catagories)
 
+
+@app.route("/delete_task/<task_id>")
+def delete_task(task_id):
+    mongo.db.tasks.delete_one({"_id": ObjectId(task_id)})
+    flash("Task Successfully Deleted")
+    return redirect(url_for("get_tasks"))
+
+
+@app.route("/get_categories")
+def get_categories():
+    catagories = list(mongo.db.catagories.find().sort("category_name", 1))
+    return render_template("categories.html", catagories=catagories)
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),
